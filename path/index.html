@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>test</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="js/points.js"></script>
+    <script>
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+        camera.position.set(0, 0, 100);
+        camera.lookAt(0, 0, 0);
+
+        var scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xC0C0C0);
+
+
+        //create a blue LineBasicMaterial
+        var materialLine = new THREE.LineBasicMaterial({ color: 0x0000ff });
+
+
+        var RenderPointsFirstFloor = [];
+        var RenderPointsFirstFloorMoving = [];
+        FirstFloorPoints.forEach(points => {
+            if (!points.moving) {
+                RenderPointsFirstFloor.push(new THREE.Vector3(points.x, points.y, points.z));
+            } else {
+                RenderPointsFirstFloorMoving.push(new THREE.Vector3(points.x, points.y, points.z));
+            }
+        });
+
+        var geometryFirstFloor = new THREE.BufferGeometry().setFromPoints(RenderPointsFirstFloor);
+        var geometryFirstFloorMoving = new THREE.BufferGeometry().setFromPoints(RenderPointsFirstFloorMoving);
+
+        var materialPoint = new THREE.PointsMaterial({
+            color: 0xff0000,
+            size: 1,
+            opacity: 1
+        });
+        var materialPointMoving = new THREE.PointsMaterial({
+            color: 0x00000,
+            size: 1,
+            opacity: 1
+        });
+
+
+        let fromPoint = 4;
+        let fromFloor = 1;
+        let toPoint = 11;
+        let toFloor = 1;
+
+        let stop = false;
+
+        // если точки на разных этажах
+        if (fromFloor !== toFloor) {
+            if (fromFloor < toFloor) {
+                // объединяем точки (идем до точки выхода на следующий этаж)
+            }
+            else {
+
+            }
+        }
+
+        let solutionsTmp = [
+            [[fromPoint], []]
+        ];
+        const solutionsFinal = [];
+
+
+        function includes(innerArr, outerArr) {
+            if (innerArr.length === 0) return false;
+            let incl = false;
+
+            for (let i = 0; i < innerArr.length; i++) {
+                if (innerArr[i][0] == outerArr[0]) {
+                    incl = true;
+                    for (let j = 1; j < innerArr[i].length; j++) {
+                        if (innerArr[i][j] != outerArr[j]) {
+                            incl = false;
+                            break;
+                        }
+                    }
+                    if (incl) break;
+                }
+            }
+            return incl;
+        }
+
+
+        function checkSolutionsTmp(solutionsInner) {
+            solutionsTmp = [];
+
+            solutionsInner.forEach((solution, ind) => {
+                const [SolutionPoints, links] = solution;
+
+                FirstFloorLinks.forEach(link => {
+
+                    for (let i = 0; i < link.length; i++) {
+                        if (SolutionPoints[SolutionPoints.length - 1] === link[i]) {
+                            if (!includes(links, link)) {
+                                let point = link.filter(item => item !== link[i])[0];
+
+                                if (point === toPoint) {
+                                    solutionsFinal.push(JSON.parse(JSON.stringify(solution)));
+                                    solutionsFinal[solutionsFinal.length - 1][0].push(point);
+                                    solutionsFinal[solutionsFinal.length - 1][1].push(link);
+                                } else {
+                                    solutionsTmp.push(JSON.parse(JSON.stringify(solution)));
+                                    solutionsTmp[solutionsTmp.length - 1][0].push(point);
+                                    solutionsTmp[solutionsTmp.length - 1][1].push(link);
+                                }
+                                break;
+                            }
+
+                        }
+                    }
+                });
+
+            });
+
+            if (!solutionsTmp.length) stop = true;
+        }
+
+        while (!stop) {
+            checkSolutionsTmp(solutionsTmp);
+        }
+
+        console.dir(solutionsFinal);
+
+
+        function compareLines(arrFinal) {
+            let pointsFinal = [];
+            let geomFinal;
+            let lineFinal;
+            let lineFinalLenght;
+
+            arrFinal.forEach(([linePoints]) => {
+                let pointsTmp = [];
+                let geomTmp;
+                let lineTmp;
+                let ld;
+                let lineTmpLenght;
+
+                linePoints.forEach(point => {
+                    let x = FirstFloorPoints[point].x;
+                    let y = FirstFloorPoints[point].y;
+                    let z = FirstFloorPoints[point].z;
+                    pointsTmp.push(new THREE.Vector3(x, y, z));
+                });
+
+                geomTmp = new THREE.BufferGeometry().setFromPoints(pointsTmp);
+                lineTmp = new THREE.Line(geomTmp, materialLine);
+                lineTmp.computeLineDistances();
+                ld = lineTmp.geometry.getAttribute("lineDistance");
+                lineTmpLenght = ld.getX(ld.count - 1);
+                console.log("line's total length: " + ld.getX(ld.count - 1));
+
+                if (!lineFinalLenght || lineTmpLenght < lineFinalLenght) {
+                    pointsFinal = pointsTmp;
+                    geomFinal = geomTmp;
+                    lineFinal = lineTmp;
+                    lineFinalLenght = lineTmpLenght;
+                }
+            });
+
+            // return lineFinal;
+            console.log(geomFinal);
+            return geomFinal;
+        }
+
+
+
+        var pointCloudFirstFloor = new THREE.Points(geometryFirstFloor, materialPoint);
+        var pointCloudFirstFloorMoving = new THREE.Points(geometryFirstFloorMoving, materialPointMoving);
+        scene.add(pointCloudFirstFloor);
+        scene.add(pointCloudFirstFloorMoving);
+
+
+
+
+        // let line = new THREE.Line(geometry, material);
+
+        // line.computeLineDistances();
+
+        // var ld = line.geometry.getAttribute("lineDistance");
+        // console.log("line's total length: " + ld.getX(ld.count - 1));
+
+
+        // scene.add(line);
+
+        let geomFinal = compareLines(solutionsFinal);
+        let lineFinal = new THREE.Line(geomFinal, materialLine);
+        scene.add(lineFinal);
+
+        renderer.render(scene, camera);
+
+
+    </script>
+</body>
+
+</html>
