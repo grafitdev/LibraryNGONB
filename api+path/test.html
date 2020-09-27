@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>test</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="js/points.js"></script>
+    <script>
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+        camera.position.set(0, 0, 100);
+        camera.lookAt(0, 0, 0);
+
+        var scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xC0C0C0);
+
+
+        const materialLine = new THREE.LineBasicMaterial({ color: 0x0000ff });
+        const materialPoint = new THREE.PointsMaterial({
+            color: 0xff0000,
+            size: 1,
+            opacity: 1
+        });
+        const materialPointMoving = new THREE.PointsMaterial({
+            color: 0x00000,
+            size: 1,
+            opacity: 1
+        });
+
+
+        const from = {
+            target: 4,
+            floor: 1
+        };
+        const to = {
+            target: 0,
+            floor: 2
+        }
+
+        const configMap = {};
+        const solutionsTmp = {};
+        // let solutionsTmp = [
+        //     [[fromPoint], []]
+        // ];
+        const solutionsFinal = {};
+
+
+        function initializationConfigMap(from, to) {
+            let currentFloor = from.floor;
+
+            if (to.floor > from.floor) {
+                while (currentFloor <= to.floor) {
+                    let upPoint = Floors[`${currentFloor}`].points.findIndex(item => item.moving === 'up');
+                    let downPoint = Floors[`${currentFloor}`].points.findIndex(item => item.moving === 'down');
+
+                    configMap[`${currentFloor}`] = {
+                        fromPoint: +`${currentFloor === from.floor ? from.target : downPoint}`,
+                        toPoint: +`${currentFloor === to.floor ? to.target : upPoint}`,
+                    }
+                    currentFloor++;
+                }
+            } else {
+                while (currentFloor >= to.floor) {
+                    let upPoint = Floors[`${currentFloor}`].points.find(item => item.moving === 'up');
+                    let downPoint = Floors[`${currentFloor}`].points.find(item => item.moving === 'down');
+
+                    configMap[`${currentFloor}`] = {
+                        fromPoint: +`${currentFloor === from.floor ? from.target : upPoint}`,
+                        toPoint: +`${currentFloor === to.floor ? to.target : downPoint}`,
+                    }
+                    currentFloor--;
+                }
+            }
+        }
+
+
+        function initializationSolutionsTmp(configMap) {
+            for (let key in configMap) {
+                solutionsTmp[`${key}`] = [
+                    [[configMap[`${key}`].fromPoint], []]
+                ];
+            }
+        }
+
+
+        function includes(innerArr, outerArr) {
+            if (innerArr.length === 0) return false;
+            let incl = false;
+
+            for (let i = 0; i < innerArr.length; i++) {
+                if (innerArr[i][0] == outerArr[0]) {
+                    incl = true;
+                    for (let j = 1; j < innerArr[i].length; j++) {
+                        if (innerArr[i][j] != outerArr[j]) {
+                            incl = false;
+                            break;
+                        }
+                    }
+                    if (incl) break;
+                }
+            }
+            return incl;
+        }
+
+
+        function checkSolutionsTmp(floor, solutionsInner, toPoint, stopObj) {
+            solutionsTmp[`${floor}`] = [];
+
+            solutionsInner.forEach((solution, ind) => {
+                const [SolutionPoints, links] = solution;
+
+                Floors[`${floor}`].links.forEach(link => {
+
+                    for (let i = 0; i < link.length; i++) {
+                        if (SolutionPoints[SolutionPoints.length - 1] === link[i]) {
+                            if (!includes(links, link)) {
+                                let point = link.filter(item => item !== link[i])[0];
+
+                                if (point === toPoint) {
+                                    if (!solutionsFinal[`${floor}`]) {
+                                        solutionsFinal[`${floor}`] = [];
+                                    }
+                                    solutionsFinal[`${floor}`].push(JSON.parse(JSON.stringify(solution)));
+                                    solutionsFinal[`${floor}`][solutionsFinal[`${floor}`].length - 1][0].push(point);
+                                    solutionsFinal[`${floor}`][solutionsFinal[`${floor}`].length - 1][1].push(link);
+                                } else {
+                                    solutionsTmp[`${floor}`].push(JSON.parse(JSON.stringify(solution)));
+                                    solutionsTmp[`${floor}`][solutionsTmp[`${floor}`].length - 1][0].push(point);
+                                    solutionsTmp[`${floor}`][solutionsTmp[`${floor}`].length - 1][1].push(link);
+                                }
+                                break;
+                            }
+
+                        }
+                    }
+                });
+
+            });
+
+            // console.log("solutionsTmp[`${floor}`]");
+            // console.log(solutionsTmp[`${floor}`]);
+            if (!solutionsTmp[`${floor}`].length) stopObj.stop = true;
+        }
+
+
+        function compareLines(arrFinal, floor) {
+            let pointsFinal = [];
+            let geomFinal;
+            let lineFinal;
+            let lineFinalLenght;
+
+            arrFinal.forEach(([linePoints]) => {
+                let pointsTmp = [];
+                let geomTmp;
+                let lineTmp;
+                let ld;
+                let lineTmpLenght;
+
+                linePoints.forEach(point => {
+                    let x = Floors[floor].points[point].x;
+                    let y = Floors[floor].points[point].y;
+                    let z = 0;
+                    pointsTmp.push(new THREE.Vector3(x, y, z));
+                });
+
+                geomTmp = new THREE.BufferGeometry().setFromPoints(pointsTmp);
+                lineTmp = new THREE.Line(geomTmp, materialLine);
+                lineTmp.computeLineDistances();
+                ld = lineTmp.geometry.getAttribute("lineDistance");
+                lineTmpLenght = ld.getX(ld.count - 1);
+                console.log("line's total length: " + ld.getX(ld.count - 1));
+
+                if (!lineFinalLenght || lineTmpLenght < lineFinalLenght) {
+                    pointsFinal = pointsTmp;
+                    geomFinal = geomTmp;
+                    lineFinal = lineTmp;
+                    lineFinalLenght = lineTmpLenght;
+                }
+            });
+
+            // return lineFinal;
+            // console.log(geomFinal);
+            return geomFinal;
+        }
+
+
+        function renderPoints() {
+            const renderPoints = {
+                // 1: {
+                //     stat: [],
+                //     moving: []
+                // }
+            };
+
+            for (let key in Floors) {
+                if (!renderPoints[key]) {
+                    renderPoints[key] = {
+                        stat: [],
+                        moving: []
+                    }
+                }
+
+                Floors[key].points.forEach(point => {
+                    if (!point.moving) {
+                        renderPoints[key].stat.push(new THREE.Vector3(point.x, point.y, 0));
+                    } else {
+                        renderPoints[key].moving.push(new THREE.Vector3(point.x, point.y, 0));
+                    }
+                })
+            }
+
+            for (let key in renderPoints) {
+                for (let k in renderPoints[key]) {
+                    let geometryPoints;
+                    if (k === 'stat') {
+                        geometryPoints = new THREE.BufferGeometry().setFromPoints(renderPoints[key][k]);
+                        scene.add(new THREE.Points(geometryPoints, materialPoint));
+                    } else if (k === "moving") {
+                        geometryPoints = new THREE.BufferGeometry().setFromPoints(renderPoints[key][k]);
+                        scene.add(new THREE.Points(geometryPoints, materialPointMoving));
+                    }
+                }
+            }
+        }
+
+
+        function renderRoutes(obj) {
+            for (let key in obj) {
+                let geomFinal = compareLines(obj[`${key}`], key);
+                // let key = new THREE.Line(geomFinal, materialLine);
+                scene.add(new THREE.Line(geomFinal, materialLine));
+            }
+        }
+
+
+
+        initializationConfigMap(from, to);
+
+        initializationSolutionsTmp(configMap);
+        // console.log("solutionsTmp");
+        // console.log(solutionsTmp);
+
+
+
+        for (let key in configMap) {
+            let stopObj = {
+                stop: false
+            };
+            while (!stopObj.stop) {
+                checkSolutionsTmp(key, solutionsTmp[`${key}`], configMap[`${key}`].toPoint, stopObj);
+            }
+        }
+
+        // console.log(solutionsFinal);
+
+
+
+
+        // let line = new THREE.Line(geometry, material);
+
+        // line.computeLineDistances();
+
+        // var ld = line.geometry.getAttribute("lineDistance");
+        // console.log("line's total length: " + ld.getX(ld.count - 1));
+
+
+        // scene.add(line);
+
+
+        console.log(solutionsFinal);
+        renderPoints();
+        renderRoutes(solutionsFinal);
+
+
+        // let geomFinalFirst = compareLines(solutionsFinal[1]);
+        // let lineFinal = new THREE.Line(geomFinalFirst, materialLine);
+        // scene.add(lineFinal);
+
+        renderer.render(scene, camera);
+
+
+    </script>
+</body>
+
+</html>

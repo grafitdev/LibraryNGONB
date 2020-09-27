@@ -1,0 +1,12 @@
+@import url(root__section.css);
+@import url(../common/elem-hidden.css);
+
+.root {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  height: 100vh;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+}

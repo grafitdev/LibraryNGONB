@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main</title>
+    <link rel="stylesheet" href="./src/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="root">
+        <div class="background"></div>
+
+        <header class="header root__section">
+            <a href="/map">
+                <button class="header__button header_button_map">Карта библиотеки</button>
+            </a>
+            <a href="http://omne-lab.com/ar/">
+                <button class="header__button header_button_qr">Сканер QR кода</button>
+            </a>
+        </header>
+
+        <section class="search root__section">
+            <div class="search__container">
+                <form name="search" class="search__form">
+                    <input type="text" name="search" class="search__input search__input_type_name"
+                        placeholder="Поиск информации" required
+                        oninvalid="this.setCustomValidity('Нужно ввести ключевое слово')"
+                        oninput="setCustomValidity('')">
+                    <button class="search__button" name='btn'>
+                        <div>&#8594;</div>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="result root__section elem-hidden">
+            <!-- <section class="result root__section"> -->
+            <div class="preloader elem-hidden">
+                <!-- <div class="preloader"> -->
+                <img class="preloader__gif" src="./src/images/loader.gif" alt="поиск">
+                <p class="preloader__title">Идет поиск...</p>
+            </div>
+
+            <div class="oops elem-hidden">
+                <!-- <div class="oops"> -->
+                <svg class="oops__not-found" width="96" height="96" fill="none">
+                    <circle cx="43" cy="43" r="36.5" stroke="#D1D2D6" />
+                    <path
+                        d="M69 69l19.5 19.5M58.328 55.959c-3.667-4.261-9.1-6.96-15.164-6.96-6.063 0-11.496 2.699-15.164 6.96"
+                        stroke="#D1D2D6" />
+                    <circle cx="55.5" cy="33.5" r="1.5" fill="#D1D2D6" />
+                    <circle cx="30.5" cy="33.5" r="1.5" fill="#D1D2D6" />
+                </svg>
+                <h2 class="oops__title">Ничего не найдено</h2>
+                <p class="oops__description">К сожалению по вашему запросу
+                    ничего не найдено.</p>
+            </div>
+
+            <h2 class="result__error elem-hidden">
+                <!-- <h2 class="result__error"> -->
+                Во время запроса произошла ошибка. Возможно, проблема с соединение мили
+                сервер недоступен. Подождите немного и попробуйте ещё раз</h2>
+
+            <div class="result__cards-wrapper elem-hidden">
+                <!-- <div class="result__cards-wrapper"> -->
+
+                <h2 class="result__title">Результаты поиска</h2>
+                <div class="result__cards">
+
+                    <div class="result__card">
+                        <div class="result__description">
+                            <h3 class="result__card-title">Книга: <span class="result__span result__span_book">Sieben
+                                    Jahre</span></h3>
+                            <p class="result__item">Автор: <span class="result__span result__span_author">Peter
+                                    Stamm</span>
+                            </p>
+                            <p class="result__item">Дата выпуска: <span
+                                    class="result__span result__span_data">2011.04.04</span></p>
+                            <!-- <p class="result__item">Издательство: <span
+                                    class="result__span result__span_publishing">наименование</span></p> -->
+                            <p class="result__item">Месторасположение: <span
+                                    class="result__span result__span_address">немецкий чит. зал</span></p>
+                            <p class="result__item result__item_storage">Хранение: <span
+                                    class="result__span result__span_storage">помещение 324, сторона 1, Стеллаж 1, буква
+                                    А</span></p>
+                        </div>
+                        <div class="result__buttons">
+                            <button class="result__button result__button_add">Доп. информация</button>
+                            <button class="result__button result__button_map">Построить маршрут</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="events root__section">
+            <div class="events__container">
+                <div class="events__card">
+                    <div class="events__top">
+                        <h2 class="events__title">28 Сент</h2>
+                        <p class="events__description">Заседание союза филателистов</p>
+                    </div>
+                    <img class="events__bottom" src="src/images/f1-min.png" alt="фото"></img>
+                </div>
+                <div class="events__card">
+                    <div class="events__top">
+                        <h2 class="events__title">30 Сент</h2>
+                        <p class="events__description">Мастер класс "Творчество для всех", выпуск 10</p>
+                    </div>
+                    <img class="events__bottom" src="src/images/f2-min.png" alt="фото"></img>
+                </div>
+                <div class="events__card">
+                    <div class="events__top">
+                        <h2 class="events__title">1 Окт</h2>
+                        <p class="events__description">Французский клуб</p>
+                        <p class="events__description events__description_small">Конференц-зал</p>
+                    </div>
+                    <img class="events__bottom" src="src/images/f3-min.png" alt="фото"></img>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <script src="js/api/apiFetch.js"></script>
+    <script src="js/api/apiAjax.js"></script>
+    <script src="js/helpers/validations.js"></script>
+    <script src="js/commonReduser.js"></script>
+    <script src="js/card.js"></script>
+    <script src="js/cardList.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

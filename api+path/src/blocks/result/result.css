@@ -1,0 +1,50 @@
+@import url(../preloader/preloader.css);
+@import url(../oops/oops.css);
+@import url(result__cards-wrapper.css);
+@import url(result__title.css);
+@import url(result__cards.css);
+@import url(result__card.css);
+@import url(result__image.css);
+@import url(result__prompt_saved.css);
+@import url(result__date.css);
+@import url(result__card-title.css);
+@import url(result__description.css);
+@import url(result__publisher.css);
+@import url(result__showmore.css);
+@import url(result__link.css);
+@import url(result__error.css);
+@import url(result__item.css);
+@import url(result__span.css);
+@import url(result__buttons.css);
+@import url(result__button.css);
+
+
+.result {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  margin-bottom: 80px;
+
+  background-color: var(--color-gray);
+}
+
+
+@media all and (max-width: 1440px) {
+  .result {
+    padding-top: calc(40px + (80 - 40)*(100vw - 768px)/(1440- 768));
+    padding-bottom: calc(40px + (80 - 40)*(100vw - 768px)/(1440- 768));
+  }
+}
+
+@media all and (max-width: 768px) {
+  .result {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+@media all and (max-width: 320px) {
+  .result {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}

@@ -1,0 +1,18 @@
+.common-preloader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray);
+  z-index: 2;
+  transition: all .5s linear;
+}
+
+.common-preloader_hidden {
+  opacity: 0;
+  z-index: -1;
+}

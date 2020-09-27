@@ -1,0 +1,21 @@
+.result__cards {}
+
+@media all and (max-width: 1440px) {
+  .result__cards {}
+}
+
+@media all and (max-width: 768px) {
+  .result__cards {}
+}
+
+@media all and (max-width: 650px) {
+  .result__cards {}
+}
+
+@media all and (max-width: 405px) {
+  .result__cards {}
+}
+
+@media all and (max-width: 320px) {
+  .result__cards {}
+}

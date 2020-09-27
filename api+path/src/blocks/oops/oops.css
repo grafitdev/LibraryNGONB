@@ -1,0 +1,23 @@
+@import url(oops__title.css);
+@import url(oops__description.css);
+
+.oops {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*display: none;*/
+
+  width: 356px;
+  margin: auto;
+}
+
+.oops_is-opened {
+  display: flex;
+}
+
+
+@media all and (max-width: 650px) {
+  .oops {
+    width: 100%;
+  }
+}

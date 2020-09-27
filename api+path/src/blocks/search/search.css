@@ -1,0 +1,19 @@
+@import url(search__container.css);
+@import url(search__form.css);
+@import url(search__input.css);
+@import url(search__button.css);
+
+.search {
+  padding-top: 40px;
+  padding-bottom: 70px;
+  position: relative;
+  color: var(--color-main-white);
+}
+
+@media all and (max-width: 768px) {
+  .search {}
+}
+
+@media all and (max-width: 320px) {
+  .search {}
+}

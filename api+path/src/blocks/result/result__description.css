@@ -1,0 +1,15 @@
+.result__description {
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16rem;
+  line-height: 137%;
+
+  width: 70%;
+}
+
+@media all and (max-width: 768px) {
+  .result__description {
+
+  }
+}

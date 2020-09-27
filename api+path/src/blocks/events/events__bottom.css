@@ -1,0 +1,10 @@
+.events__bottom {
+    width: 100%;
+    height: 272px;
+    background-size: cover;
+    background-position: center;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    /*свойство для img*/
+    object-fit: cover;
+}

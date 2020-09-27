@@ -1,0 +1,9 @@
+.result__date {
+  font-family: Source Sans Pro, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 24px;
+
+  color: var(--color-gray-text);
+}

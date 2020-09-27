@@ -1,0 +1,9 @@
+.events__description {
+    font-size: 27rem;
+    line-height: 110%;
+}
+
+.events__description_small {
+    margin-top: 20px;
+    font-size: 20rem;
+}

@@ -1,0 +1,24 @@
+.result__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 80%;
+  margin: auto;
+  text-align: center;
+
+  font-family: Roboto Slab, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 26px;
+  line-height: 30px;
+
+  color: var(--color-main-primary);
+}
+
+
+@media all and (max-width: 650px) {
+  .result__error {
+    width: 100%;
+  }
+}

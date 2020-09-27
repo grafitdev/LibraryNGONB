@@ -1,0 +1,12 @@
+.search__container {
+  width: 100%;
+  margin: auto;
+}
+
+@media all and (max-width: 768px) {
+  .search__container {}
+}
+
+@media all and (max-width: 320px) {
+  .search__container {}
+}

@@ -1,0 +1,11 @@
+@import url(preloader__title.css);
+
+.preloader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preloader_is-opened {
+  display: flex;
+}

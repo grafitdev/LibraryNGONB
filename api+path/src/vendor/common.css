@@ -1,0 +1,14 @@
+@import "./fonts/fonts.css";
+
+:root {
+    --color-main-primary: #1A1B22;
+    --color-main-white: #fff;
+    --color-gray-text: #b6bcbf;
+    --color-gray: #f5f6f7;
+    --color-blue: #2f71e5;
+    --color-lightblue: #347eff;
+    --color-darkblue: #2a65cc;
+    --color-gray-locked: #e6e8eb;
+
+    font-size: 1px;
+}

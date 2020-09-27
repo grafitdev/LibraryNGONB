@@ -1,0 +1,24 @@
+.result__image {
+  width: 100%;
+  height: 272px;
+
+  background-size: cover;
+  background-position: center;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  /*свойство для img*/
+  object-fit: cover;
+  /*background-image: url(https://yandex.ru/images/_crpd/CdEdD6117/30d070WRd8m/gaDcrOrqdDtE9oeMh0B6rG_lL6gfkE6Cu-K6sgOM5NVMHVODLJnnvL4AO5IfdiMoUK2Eefv26xMq45Gl1VOaYhMgHCpr-_SrEeQDy0VVaywtcTi9Cs);*/
+}
+
+@media all and (max-width: 1440px) {
+  .result__image {
+    height: calc(150px + (272 - 150)*(100vw - 768px)/(1440 - 768));
+  }
+}
+
+@media all and (max-width: 768px) {
+  .result__image {
+    height: calc(196px + (150 - 196)*(100vw - 320px)/(768 - 320));
+  }
+}

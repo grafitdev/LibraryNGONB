@@ -1,0 +1,25 @@
+.result__publisher {
+  font-family: Roboto Slab, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  padding-top: 10px;
+
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+
+  color: var(--color-gray-text);
+}
+
+@media all and (max-width: 768px) {
+  .result__publisher {
+    padding-top: 10px;
+  }
+}
+
+@media all and (max-width: 320px) {
+  .result__publisher {
+    padding-top: 8px;
+  }
+}
